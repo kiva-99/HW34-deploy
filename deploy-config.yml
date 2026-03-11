@@ -1,0 +1,14 @@
+# GitOps Deploy Configuration
+# Этот файл — единственный источник правды о том что задеплоено
+# Меняешь здесь → Jenkins автоматически деплоит новую версию
+
+app:
+  name: hw34-app
+  image: kirilliva/hw34-flask
+  tag: latest        # Jenkins будет обновлять это поле
+  port: 5000
+
+deploy:
+  updated_by: manual
+  timestamp: "2026-03-11T00:00:00Z"
+  build_number: "0"
