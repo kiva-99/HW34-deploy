@@ -21,13 +21,14 @@ pipeline {
             echo "=== Текущий конфиг ==="
             echo config
 
-            // Читаем каждую строку и ищем нужные поля
-            config.eachLine { line ->
-                if (line.trim().startsWith('image:')) {
-                    env.DOCKER_IMAGE = line.trim().replace('image:', '').trim()
+            def lines = config.split('\n')
+            for (int i = 0; i < lines.size(); i++) {
+                def line = lines[i].trim()
+                if (line.startsWith('image:')) {
+                    env.DOCKER_IMAGE = line.replace('image:', '').trim()
                 }
-                if (line.trim().startsWith('tag:')) {
-                    env.DOCKER_TAG = line.trim().replace('tag:', '').trim()
+                if (line.startsWith('tag:')) {
+                    env.DOCKER_TAG = line.replace('tag:', '').trim()
                 }
             }
 
