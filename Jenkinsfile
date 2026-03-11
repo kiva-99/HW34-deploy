@@ -12,25 +12,29 @@ pipeline {
     stages {
 
         stage('Read Deploy Config') {
-            steps {
-                echo "=== GitOps: читаем конфигурацию деплоя ==="
-                checkout scm
+    steps {
+        echo "=== GitOps: читаем конфигурацию деплоя ==="
+        checkout scm
 
-                script {
-                    def config = readFile(DEPLOY_CONFIG)
-                    echo "=== Текущий конфиг ==="
-                    echo config
+        script {
+            def config = readFile('deploy-config.yml')
+            echo "=== Текущий конфиг ==="
+            echo config
 
-                    def imageLine = config.find(/image:\s*(.+)/) { m, g -> g }
-                    def tagLine   = config.find(/tag:\s*(.+)/)   { m, g -> g }
-
-                    env.DOCKER_IMAGE = imageLine?.trim()
-                    env.DOCKER_TAG   = tagLine?.trim()
-
-                    echo "=== Деплоим: ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ==="
+            // Читаем каждую строку и ищем нужные поля
+            config.eachLine { line ->
+                if (line.trim().startsWith('image:')) {
+                    env.DOCKER_IMAGE = line.trim().replace('image:', '').trim()
+                }
+                if (line.trim().startsWith('tag:')) {
+                    env.DOCKER_TAG = line.trim().replace('tag:', '').trim()
                 }
             }
+
+            echo "=== Деплоим: ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ==="
         }
+    }
+}
 
         stage('Deploy') {
             steps {
