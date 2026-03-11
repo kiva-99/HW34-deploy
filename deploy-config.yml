@@ -5,10 +5,10 @@
 app:
   name: hw34-app
   image: kirilliva/hw34-flask
-  tag: latest        # Jenkins будет обновлять это поле
+  tag: build-14
   port: 5000
 
 deploy:
-  updated_by: manual
-  timestamp: "2026-03-11T00:00:00Z"
-  build_number: "0"
+  updated_by: jenkins
+  timestamp: "2026-03-11T09:58:32Z"
+  build_number: "14"
